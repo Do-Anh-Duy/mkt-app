@@ -146,20 +146,14 @@ $(document).ready(function () {
         e.preventDefault(); // Ngăn chặn form gửi tự động
 
         // Lấy dữ liệu từ các trường
+        var nameconverted = $('#nameconverted').val();
+        var gidconverted = $('#gidconverted').val();
         var username1 = $('#username1').val();
         var password1 = $('#password1').val();
         var store1 = $('#store1').val();
         var username2 = $('#username2').val();
         var password2 = $('#password2').val();
         var activeStatus = $('#activateSwitch').prop('checked') ? 1 : 0; // Kiểm tra trạng thái kích hoạt
-
-        // Kiểm tra tất cả các trường có dữ liệu hợp lệ
-        if (!username1 || !password1 || !store1 || !username2 || !password2) {
-            alert('Vui lòng điền đầy đủ thông tin!');
-            $('#btnSaveSpinner').hide();
-            $('#btnSave').prop('disabled', false);
-            return;
-        }
 
         // Gửi dữ liệu đến backend
         $.ajax({
@@ -172,19 +166,23 @@ $(document).ready(function () {
                 store1: store1,
                 username2: username2,
                 password2: password2,
-                activeStatus: activeStatus
+                activeStatus: activeStatus,
+                nameconverted: nameconverted,
+                gidconverted: gidconverted,
             },
             success: function (response) {
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert('Đã có lỗi xảy ra!');
+                    alert('Đã có lỗi xảy ra!1111');
                     $('#btnSaveSpinner').hide();
                     $('#btnSave').prop('disabled', false);
                 }
             },
-            error: function () {
-                alert('Đã có lỗi xảy ra!');
+            error: function (xhr, status, error) {
+                console.log('Lỗi chi tiết:', xhr.responseText); // Xem lỗi trả về từ server
+                console.log('Status:', status);
+                console.log('Error:', error);
                 $('#btnSaveSpinner').hide();
                 $('#btnSave').prop('disabled', false);
             }
@@ -196,14 +194,13 @@ $(document).ready(function () {
     $('.switch-status').change(function () {
         let id = $(this).data('id');
         let status = $(this).is(':checked') ? 1 : 0;
-
         $.ajax({
             url: '/update-status',
             method: 'POST',
             data: {
                 id: id,
                 status: status,
-                _token: '{{ csrf_token() }}'
+                _token: $('meta[name="csrf-token"]').attr('content'),
             },
             success: function (res) {
                 if (res.success) {
@@ -229,8 +226,9 @@ $(document).on('click', '.open-edit-modal', function () {
 
     $.get('/connection/' + id, function (res) {
         if (res.success) {
-            const d = res.connection;
-
+            const d = res.connection[0];
+            $('#nameconverted1').val(d.name_converted);
+            $('#gidconverted2').val(d.gid_converted);
             $('#editUsername3').val(d.username_sapo);
             $('#editPassword3').val(d.password_sapo);
             $('#editStore3').val(d.store_sapo);
@@ -264,15 +262,9 @@ $(document).ready(function () {
         var username4 = $('#editUsername4').val();
         var password4 = $('#editPassword4').val();
         var activeStatus1 = $('#editActivateSwitch1').prop('checked') ? 1 : 0; // Kiểm tra trạng thái kích hoạt
-        console.log(username3, password3, store3, username4, password4);
-        // Kiểm tra tất cả các trường có dữ liệu hợp lệ
-        if (!username3 || !password3 || !store3 || !username4 || !password4) {
-            alert('Vui lòng điền đầy đủ thông tin!');
-                $('#btnSaveSpinner').hide();
-                $('#btnSave').prop('disabled', false);
-            return;
-        }
-
+        var nameconverted1 = $('#nameconverted1').val();
+        var gidconverted2 = $('#gidconverted2').val();
+        
         // Gửi dữ liệu đến backend
         $.ajax({
             url: '/connection/update', // Đường dẫn đến controller Laravel
@@ -285,7 +277,9 @@ $(document).ready(function () {
                 username4: username4,
                 password4: password4,
                 activeStatus1: activeStatus1,
-                connectionId1: connectionId1
+                connectionId1: connectionId1,
+                nameconverted1: nameconverted1,
+                gidconverted2: gidconverted2,
             },
             success: function (response) {
                 if (response.success) {
@@ -297,7 +291,7 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                alert('Đã có lỗi xảy ra!test');
+                alert('Đã có lỗi xảy ra!');
                 $('#btnSaveSpinner').hide();
                 $('#btnSave').prop('disabled', false);
             }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Trang chủ')
+@section('title', 'Liên kết')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
@@ -9,7 +9,7 @@
     min-width: 100%;
 }
 table.table {
-    white-space: nowrap; /* Ngăn nội dung bị xuống dòng */
+    white-space: nowrap;
 }
 </style>
 
@@ -31,7 +31,6 @@ table.table {
                         <th>Tài khoản Dotdigital</th>
                         <th>Người tạo</th>
                         <th>Trạng thái</th>
-                        <th>Ngày tạo</th>
                     </tr>
                 </thead>
                 @if (!empty($connections) && $connections->count())
@@ -57,7 +56,6 @@ table.table {
                                 <label class="custom-control-label" for="switchStatus{{ $conn->id }}">Kích hoạt</label>
                             </div>
                         </td>
-                        <td>{{ \Carbon\Carbon::parse($conn->created_at)->format('d/m/Y H:i') }}</td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -90,15 +88,15 @@ table.table {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="username1">Tài khoản Sapo<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="username1" name="username1" placeholder="Nhập tài khoản">
+                            <input type="text" class="form-control" id="username1" name="username1" placeholder="Nhập tài khoản" required>
                         </div>
                         <div class="form-group">
                             <label for="password1">Mật khẩu Sapo<span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" id="password1" name="password1" placeholder="Nhập mật khẩu">
+                            <input type="password" class="form-control" id="password1" name="password1" placeholder="Nhập mật khẩu" required>
                         </div>
                         <div class="form-group">
                             <label for="store1">Tên cửa hàng (subdomain Sapo)<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="store1" name="store1" placeholder="VD: jblonlinestore">
+                            <input type="text" class="form-control" id="store1" name="store1" placeholder="VD: jblonlinestore.mysapo.net" required>
                         </div>
                         <div class="form-group text-right">
                             <button type="button" id="btnTestConnection" class="btn btn-outline-primary btn-sm">Kiểm tra kết nối</button>
@@ -108,14 +106,29 @@ table.table {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="username2">Tài khoản Dotdigital<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="username2" name="username2" placeholder="Nhập tài khoản">
+                            <input type="text" class="form-control" id="username2" name="username2" placeholder="Nhập tài khoản" required>
                         </div>
                         <div class="form-group">
                             <label for="password2">Mật khẩu Dotdigital<span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Nhập mật khẩu">
+                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Nhập mật khẩu" required>
                         </div>
                         <div class="form-group text-right">
                             <button type="button" class="btn btn-outline-primary btn-sm" id="btnTestDotdigital">Kiểm tra kết nối</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nameconverted">Đơn vị chuyển đổi<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nameconverted" name="nameconverted" placeholder="VD: USD, EUR, EUR, ..." required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="gidconverted">Tỷ lệ chuyển đổi sang VND<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="gidconverted" name="gidconverted" placeholder="VD: 25500" required>
                         </div>
                     </div>
                 </div>
@@ -182,6 +195,21 @@ table.table {
               </div>
             </div>
           </div>
+        <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nameconverted1">Đơn vị chuyển đổi<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nameconverted1" name="nameconverted1" placeholder="VD: USD, EUR, EUR, ..." required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="gidconverted2">Tỷ lệ chuyển đổi sang VND<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="gidconverted2" name="gidconverted2" placeholder="VD: 25500" required>
+                        </div>
+                    </div>
+                </div>
         </div>
         <input type="hidden" id="editConnectionId1" name="connectionId1">
         <input type="hidden" id="editActiveStatus1" name="activeStatus1">

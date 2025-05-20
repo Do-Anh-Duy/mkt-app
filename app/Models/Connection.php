@@ -12,6 +12,7 @@ class Connection extends Model
     // Đảm bảo bạn đã xác định bảng và các trường (nếu cần)
     protected $table = 'connections'; // Thay đổi tên bảng nếu cần
     protected $fillable = [
+        'id',
         'username_sapo',
         'password_sapo',
         'store_sapo',
@@ -20,5 +21,7 @@ class Connection extends Model
         'active_status',
         'created_by',
         'created_at',
+        'customers_sync_time',
+        'orders_sync_time'
     ];
 }
