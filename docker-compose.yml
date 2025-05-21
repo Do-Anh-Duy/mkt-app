@@ -10,6 +10,12 @@ services:
     working_dir: /var/www
     volumes:
       - .:/var/www
+    command: >
+      sh -c "
+        chown -R www-data:www-data storage bootstrap/cache &&
+        chmod -R 775 storage bootstrap/cache &&
+        php-fpm
+      "
     networks:
       - laravel
 

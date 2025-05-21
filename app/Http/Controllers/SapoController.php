@@ -25,7 +25,7 @@ class SapoController extends Controller
         $created_on_max = $today . 'T23:59:59Z';
 
         // Tạo URL với tham số ngày
-        $url = "https://{$username}:{$password}@{$store}.mysapo.net/admin/orders.json";
+        $url = "https://{$username}:{$password}@{$store}/admin/orders.json";
         $url .= "?fields=created_on,id,name,total_price";
         $url .= "&created_on_min={$created_on_min}&created_on_max={$created_on_max}";
 
