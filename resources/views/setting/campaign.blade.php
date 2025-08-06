@@ -78,10 +78,16 @@ td, th {
                 <label for="campaignName">Tên chiến dịch<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="campaignName" name="campaignName">
               </div>
-              <div class="form-group">
-                <label for="linkSapo">Link Sapo<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="linkSapo" name="linkSapo">
+              <div class="form-group" id="sapo-links">
+                <label>Link Sapo <span class="text-danger">*</span></label>
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control" name="link_sapo[]">
+                  <div class="input-group-append">
+                    <button class="btn btn-danger" type="button" onclick="removeLink(this)">❌</button>
+                  </div>
+                </div>
               </div>
+              <button type="button" class="btn btn-secondary" onclick="addSapoLink()">Thêm link</button>
             </div>
           </div>
         </div>
@@ -133,5 +139,26 @@ td, th {
 </div>
 
 <script src="{{ asset('assets/js/campaign.js') }}"></script>
+<script>
+  function addSapoLink() {
+    const container = document.getElementById('sapo-links');
+
+    const div = document.createElement('div');
+    div.className = 'input-group mb-2';
+
+    div.innerHTML = `
+      <input type="text" class="form-control" name="link_sapo[]">
+      <div class="input-group-append">
+        <button class="btn btn-danger" type="button" onclick="removeLink(this)">❌</button>
+      </div>
+    `;
+
+    container.appendChild(div);
+  }
+
+  function removeLink(button) {
+    button.closest('.input-group').remove();
+  }
+</script>
 
 @endsection

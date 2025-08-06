@@ -46,7 +46,7 @@ class SyncDotdigitalOrdersJob extends Command
                     'sku' => $value['sku'],
                     'name' => $value['name'],
                     'qty' => $value['quantity'],
-                    'price' => $value['order_item_converted_price'],
+                    'price' => $value['discounted_total'],
                 ];
             }
             $connect = Connection::where('store_sapo', $order->sapo_store)->get()->toArray();
@@ -75,9 +75,9 @@ class SyncDotdigitalOrdersJob extends Command
                         'key' => $order->order_number,
                         'json' => [
                             'id' => (string) $order->order_number,
-                            'order_total' => $order->order_converted_price,
-                            'order_subtotal' => $order->order_converted_price,
-                            'currency' => 'USD',
+                            'order_total' => $order->subtotal_price,
+                            'order_subtotal' => $order->subtotal_price,
+                            'currency' => 'VND',
                             'purchase_date' => $order->created_time,
                             'order_status' => 'complete',
                             'campaign_id' => $order->campaign_id,

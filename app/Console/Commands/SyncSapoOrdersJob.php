@@ -111,8 +111,15 @@ class SyncSapoOrdersJob extends Command
 
                         ]);
                 }
-
-                $campaign = Campaign::where('link_sapo', $item['landing_site'])->get()->toArray();
+                $landingSite = $item['landing_site'] ?? null;
+                if ($landingSite) {
+                    $pos = strpos($landingSite, '&dm_');
+                    if ($pos !== false) {
+                        $landingSite = substr($landingSite, 0, $pos);
+                    }
+                    $campaign = Campaign::whereJsonContains('link_sapo', $landingSite)->get()->toArray();
+                }
+                
                 // Cập nhật hoặc chèn đơn hàng vào bảng 'orders'
                 DB::table('orders')->updateOrInsert(
                     [

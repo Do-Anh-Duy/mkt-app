@@ -69,7 +69,7 @@ class SettingCampaignController extends Controller
                 'data' => [
                     'id' => $campaign->id,
                     'campaigns_name' => $campaign->campaigns_name,
-                    'link_sapo' => $campaign->link_sapo,
+                    'link_sapo' => json_decode($campaign->link_sapo, true),
                     'sapo_store' => $campaign->sapo_store,
                 ]
             ]);
@@ -89,7 +89,7 @@ class SettingCampaignController extends Controller
             return response()->json(['success' => false, 'message' => 'Không tìm thấy chiến dịch']);
         }
         $campaign->campaigns_name = $request->campaigns_name;
-        $campaign->link_sapo = $request->link_sapo;
+        $campaign->link_sapo = json_encode($request->link_sapo);
         $campaign->save();
         return response()->json(['success' => true]);
     }

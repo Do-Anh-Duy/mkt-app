@@ -35,7 +35,6 @@ $(document).ready(function () {
     });
 });
 
-
 $(document).ready(function () {
     $('.open-edit-modal').click(function (e) {
         e.preventDefault();
@@ -52,14 +51,49 @@ $(document).ready(function () {
                 $('#edit-modal-loading-overlay').hide();
                 
                 if (response.success) {
-                    $('#campaignName').val(response.data.campaigns_name);
-                    $('#linkSapo').val(response.data.link_sapo);
-                    $('#editConnectionId1').val(response.data.id); 
-                } else {
-                    alert('Không tìm thấy chiến dịch');
+                $('#campaignName').val(response.data.campaigns_name);
+                $('#editConnectionId1').val(response.data.id);
+
+                // ������ Clear các input link cũ (trừ label)
+                $('#sapo-links .input-group').remove();
+
+                // Nếu là JSON string thì cần parse trước
+                let links = response.data.link_sapo;
+                if (typeof links === 'string') {
+                    try {
+                        links = JSON.parse(links);
+                    } catch (e) {
+                        links = [];
+                    }
                 }
 
-                
+                // Nếu mảng rỗng thì thêm 1 input trống
+                if (!links || links.length === 0) {
+                    $('#sapo-links').append(`
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" name="link_sapo[]">
+                            <div class="input-group-append">
+                                <button class="btn btn-danger" type="button" onclick="removeLink(this)">❌</button>
+                            </div>
+                        </div>
+                    `);
+                } else {
+                    // ������ Thêm lại input cho từng link
+                    links.forEach(function (link) {
+                        $('#sapo-links').append(`
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" name="link_sapo[]" value="${link}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-danger" type="button" onclick="removeLink(this)">❌</button>
+                                </div>
+                            </div>
+                        `);
+                    });
+                }
+
+            } else {
+                alert('Không tìm thấy chiến dịch');
+            }      
             },
             error: function () {
                 $('#edit-modal-loading-overlay').hide();
@@ -103,14 +137,23 @@ $(document).ready(function () {
         $('#btnSaveSpinner1').show();
         let id = $('#editConnectionId1').val();
         let name = $('#campaignName').val();
-        let link = $('#linkSapo').val();
+
+
+        let links = $("input[name='link_sapo[]']")
+        .map(function () {
+            return $(this).val().trim();
+        })
+        .get(); // => array các link
+
+
+
         $.ajax({
             url: '/api/campaign',
             method: 'POST',
             data: {
                 id: id,
                 campaigns_name: name,
-                link_sapo: link,
+                link_sapo: links,
                 _token: $('meta[name="csrf-token"]').attr('content') 
             },
             success: function (res) {
